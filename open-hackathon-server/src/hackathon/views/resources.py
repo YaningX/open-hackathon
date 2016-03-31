@@ -251,13 +251,9 @@ class UserHackathonListResource(HackathonResource):
 class UserHackathonLikeResource(HackathonResource):
     def get(self):
         parse = reqparse.RequestParser()
-        parse.add_argument('user_id', type=int, location='args', required=False)
+        parse.add_argument('user_id', type=str, location='args', required=False)
         args = parse.parse_args()
-        query_uid = args["user_id"] or 0
-        if query_uid == g.user.id or query_uid == 0:
-            user_id = g.user.id
-        else:
-            user_id = query_uid
+        user_id = g.user.id if args["user_id"] else args["user_id"]
         return hackathon_manager.get_userlike_all_hackathon(user_id)
 
     @hackathon_name_required
@@ -273,12 +269,12 @@ class UserHackathonLikeResource(HackathonResource):
 
 class UserExperimentResource(HackathonResource, Component):
     def get(self):
-        return expr_manager.get_expr_status(int(self.context().id))
+        return expr_manager.get_expr_status(self.context().id)
 
     @token_required
     def post(self):
         context = self.context()
-        return expr_manager.start_expr(g.user.id, context.template_name, context.get("hackathon_name"))
+        return expr_manager.start_expr(g.user, context.template_name, context.get("hackathon_name"))
 
     @token_required
     def delete(self):
@@ -349,8 +345,14 @@ class TeamShowResource(HackathonResource):
 class HackathonTeamShowResource(HackathonResource):
     @hackathon_name_required
     def get(self):
-        show_type = request.args.get("type")
-        limit = request.args.get("limit", 6)
+        parse = reqparse.RequestParser()
+        parse.add_argument("limit", type=int, location='args')
+        parse.add_argument("type", type=str, location='args')
+        args = parse.parse_args()
+
+        show_type = args.get("type")
+        limit = args.get("limit", 6)
+
         return team_manager.get_hackathon_show_list(g.hackathon.id, show_type, limit)
 
 
@@ -362,7 +364,7 @@ class TeamMemberResource(HackathonResource):
     @token_required
     def put(self):
         ctx = self.context()
-        return team_manager.update_team_member_status(g.user, ctx.id, ctx.status)
+        return team_manager.update_team_member_status(g.user, ctx.team_id, ctx.user_id, ctx.status)
 
     @token_required
     def delete(self):
@@ -383,10 +385,13 @@ class HackathonTeamListResource(HackathonResource):
 class TeamMemberListResource(HackathonResource):
     def get(self):
         parse = reqparse.RequestParser()
-        parse.add_argument('team_id', type=int, location='args', required=True)
+        parse.add_argument('team_id', type=str, location='args', required=True)
         args = parse.parse_args()
 
-        return team_manager.get_team_members(args["team_id"])
+        ret = team_manager.get_team_members(args["team_id"])
+        if not ret:
+            return not_found()
+        return ret
 
 
 class TeamTemplateResource(HackathonResource):
@@ -400,9 +405,9 @@ class TeamTemplateResource(HackathonResource):
     @hackathon_name_required
     def delete(self):
         parse = reqparse.RequestParser()
-        parse.add_argument('template_id', type=int, location='args', required=True)
+        parse.add_argument('template_id', type=str, location='args', required=True)
         args = parse.parse_args()
-        return team_manager.delete_template_from(args['template_id'])
+        return team_manager.delete_template_from_team(args['template_id'])
 
 
 class TalentResource(HackathonResource):
@@ -584,7 +589,7 @@ class AdminExperimentResource(HackathonResource):
         if 'name' not in args:
             return bad_request('template name name invalid')
         template_name = args['name']
-        return expr_manager.start_expr(g.user.id, template_name, g.hackathon.name)
+        return expr_manager.start_expr(g.user, template_name, g.hackathon.name)
 
     @admin_privilege_required
     def delete(self):
@@ -679,7 +684,7 @@ class TeamAwardResource(HackathonResource):
 
     @admin_privilege_required
     def delete(self):
-        return team_manager.cancel_team_award(g.hackathon, self.context().id)
+        return team_manager.cancel_team_award(g.hackathon, self.context().team_id, self.context().award_id)
 
 
 class HackathonGrantedAwardsResource(HackathonResource):
@@ -690,7 +695,7 @@ class HackathonGrantedAwardsResource(HackathonResource):
 
 class GranteAwardsResource(HackathonResource):
     def get(self):
-        return team_manager.get_all_granted_awards(self.context().limit)
+        return team_manager.get_all_granted_awards(self.context().get("limit", 10))
 
 
 class AdminHostserverListResource(HackathonResource):
@@ -722,6 +727,10 @@ class AdminHackathonOnLineResource(HackathonResource):
     def post(self):
         return hackathon_manager.hackathon_online(g.hackathon)
 
+class AdminHackathonOffLineResource(HackathonResource):
+    @admin_privilege_required
+    def post(self):
+        return hackathon_manager.hackathon_offline(g.hackathon)
 
 class AdminHackathonNoticeResource(HackathonResource):
     @admin_privilege_required

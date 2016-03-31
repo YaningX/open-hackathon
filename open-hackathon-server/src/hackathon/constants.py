@@ -104,11 +104,6 @@ class HACKATHON_BASIC_INFO:
     FREEDOM_TEAM = "freedom_team"
 
 
-class CLOUD_ECLIPSE:
-    """CloudEclipse Constans"""
-    CLOUD_ECLIPSE = "cloud_eclipse"
-
-
 class TEMPLATE_STATUS:
     """Status for db model Template
 
@@ -165,17 +160,6 @@ class VEStatus:
     STOPPED = 3
     DELETED = 4
     UNEXPECTED_ERROR = 5
-
-
-class PortBindingType:
-    """Type of port binding
-
-    Attributes:
-        CloudService: type indicates public endpoint on cloudService
-        DOCKER: type indicates exposed port on docker host machine
-    """
-    CLOUD_SERVICE = 1
-    DOCKER = 2
 
 
 class VERemoteProvider:
@@ -294,7 +278,6 @@ class ORGANIZATION_TYPE:
 
 
 class HACK_STATUS:
-
     INIT = -1
     DRAFT = 0
     ONLINE = 1
@@ -319,7 +302,7 @@ class FILE_TYPE:
     AZURE_CERT = "azure_cert"
 
 
-class TeamMemberStatus:
+class TEAM_MEMBER_STATUS:
     """Status of member of team
 
     Attributes:
@@ -327,9 +310,9 @@ class TeamMemberStatus:
         Approved: member approved by team leader or system administrator
         Denied: member denied by team leader or system administrator. Member of this status won't be saved in DB
     """
-    Init = 0
-    Approved = 1
-    Denied = 2
+    INIT = 0
+    APPROVED = 1
+    DENIED = 2
 
 
 class DockerHostServerStatus:
@@ -491,16 +474,16 @@ class AzureVMEnpointConfigType:
     NETWORK = 'NetworkConfiguration'
 
 
-class Team_Show_Type:
+class TEAM_SHOW_TYPE:
     """Type of resource to be shown. """
-    Image = 0  # image
-    Video = 1  # e.g. Youku link
-    SourceCode = 2  # e.g. github
-    PowerPoint = 3  # ppt
-    Excel = 4  # excel
-    Word = 5  # word
-    Pdf = 6  # pdf
-    Other = 99  # other
+    IMAGE = 0  # image
+    VIDEO = 1  # e.g. Youku link
+    SOURCE_CODE = 2  # e.g. github
+    POWER_POINT = 3  # ppt
+    EXCEL = 4  # excel
+    WORD = 5  # word
+    PDF = 6  # pdf
+    OTHER = 99  # other
 
 
 class LOGIN_PROVIDER:
@@ -514,8 +497,8 @@ class LOGIN_PROVIDER:
 
 class HACK_NOTICE_CATEGORY:
     HACKATHON = 0  # hackathon related notice
-    USER = 1   # user related notice
-    EXPERIMENT = 2   # experiment related notice
+    USER = 1  # user related notice
+    EXPERIMENT = 2  # experiment related notice
     AWARD = 3  # award related notice
     TEMPLATE = 4  # template related notice
 
@@ -570,6 +553,7 @@ class SMS_CHINATELECOM_STATUSCODE:
 class CHINATELECOM_ACCESS_TOKEN_STATUSCODE:
     """Status Code of requesting ChinaTelecom access_token"""
     SUCCESS = "0"
+
 
 class CLOUD_PROVIDE:
     NONE = 0
