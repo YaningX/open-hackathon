@@ -7,8 +7,8 @@ if grep -q "Could not resolve" <<< $result; then
     echo "Could not update apt-get, please solve it"
     exit
 fi
-echo "installing git python-setuptools python-dev python-pip"
-result=$(sudo apt-get install -y git python-setuptools python-dev python-pip)
+echo "installing git python-setuptools python-dev python-pip mongodb-server"
+result=$(sudo apt-get install -y git python-setuptools python-dev python-pip mongodb-server)
 if grep -q "Unable to lacate" <<< $result; then
     echo "Could not install dependancy software, pls install docker manually"
     exit
@@ -43,25 +43,25 @@ get_dependency_for_guacamole() {
 echo "installing libcairo2-dev"
 result=$(sudo apt-get install -y libcairo2-dev)
 if grep -q "Unable to lacate" <<< $result; then
-    echo "Could not install dependancy software for guacamole, pls install guacamole manually"
+    echo "Could not install libcairo2-dev for guacamole, pls install guacamole manually"
     exit
 fi
 echo "installing libjpeg62-dev libpng12-dev libossp-uuid-dev"
 result=$(sudo apt-get install -y libjpeg62-dev libpng12-dev libossp-uuid-dev)
 if grep -q "Unable to lacate" <<< $result; then
-    echo "Could not install dependancy software for guacamole, pls install guacamole manually"
+    echo "Could not install libjpeg62-dev libpng12-dev libossp-uuid-dev for guacamole, pls install guacamole manually"
     exit
 fi
 echo "installing libfreerdp-dev libpango1.0-dev libssh2-1-dev libtelnet-dev"
 result=$(sudo apt-get install -y libfreerdp-dev libpango1.0-dev libssh2-1-dev libtelnet-dev)
 if grep -q "Unable to lacate" <<< $result; then
-    echo "Could not install dependancy software for guacamole, pls install guacamole manually"
+    echo "Could not install libfreerdp-dev libpango1.0-dev libssh2-1-dev libtelnet-dev for guacamole, pls install guacamole manually"
     exit
 fi
 echo "installing libvncserver-dev libpulse-dev libwebp-dev libssl-dev libvorbis-dev"
 result=$(sudo apt-get install -y libvncserver-dev libpulse-dev libwebp-dev libssl-dev libvorbis-dev)
 if grep -q "Unable to lacate" <<< $result; then
-    echo "Could not install dependancy software for guacamole, pls install guacamole manually"
+    echo "Could not install libvncserver-dev libpulse-dev libwebp-dev libssl-dev libvorbis-dev for guacamole, pls install guacamole manually"
     exit
 fi
 }
@@ -110,14 +110,26 @@ fi
 result=$(sudo apt-get purge lxc-docker)
 if grep -q "Unable to lacate" <<< $result; then
     echo "Could not install docker, pls install docker manually"
+    exit
 fi
-sudo apt-cache policy docker-engine
-sudo apt-get update
+result=$(sudo apt-cache policy docker-engine)
 # for ubuntu 15
-sudo apt-get install -y linux-image-extra-$(uname -r)
+result=$(sudo apt-get install -y linux-image-extra-$(uname -r))
+if grep -q "Unable to lacate" <<< $result; then
+    echo "Could not install linux-image-extra-$(uname -r), pls install docker manually"
+    exit
+fi
 # for ubuntu 12 & 14
-sudo apt-get install -y apparmor
-sudo apt-get install -y docker-engine
+result=$(sudo apt-get install -y apparmor)
+if grep -q "Unable to lacate" <<< $result; then
+    echo "Could not install apparmor, pls install docker manually"
+    exit
+fi
+result=$(sudo apt-get install -y docker-engine)
+if grep -q "Unable to lacate" <<< $result; then
+    echo "Could not install docker-engine, pls install docker manually"
+    exit
+fi
 sudo service docker start
 sudo docker run hello-world
 
