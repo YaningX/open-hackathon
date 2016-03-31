@@ -34,7 +34,7 @@ from flask import g
 from mongoengine import Q, ValidationError
 
 from hackathon import Component, RequiredFeature
-from hackathon.hmongo.models import Team, TeamMember, TeamScore, TeamWork, TeamAward, Hackathon, to_dic
+from hackathon.hmongo.models import Team, TeamMember, TeamScore, TeamWork, Hackathon, to_dic
 from hackathon.hackathon_response import not_found, bad_request, precondition_failed, ok, forbidden
 from hackathon.constants import TEAM_MEMBER_STATUS, TEAM_SHOW_TYPE
 
