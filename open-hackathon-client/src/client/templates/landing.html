@@ -1,7 +1,7 @@
 {% extends "base/default.html" %}
 
 {% block meta %}
-    <title>欢迎来到开放黑客松</title>
+    <title>Yaning-Onion</title>
     <meta name="keywords" content=""/>
     <meta name="description" content="">
 {% endblock %}
@@ -20,30 +20,15 @@
             <h1>开放黑客松</h1>
         </div>
         <div class="row">
-            <div class="col-lg-6 ">
+            <div class="text-center">
+                <div class="activity">
+                    <i class="activity-icon"></i>
 
-                <div class="text-center">
-                    <div class="activity">
-                        <i class="activity-icon"></i>
-
-                        <div class="activity-foot">
-                            <a class="btn btn-activity" href="{{ url_for('index') }}">参加活动</a>
-                        </div>
+                    <div class="activity-foot">
+                        <a class="btn btn-activity" href="{{ url_for('index') }}">参加活动</a>
                     </div>
-
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="text-center">
-                    <div class="activity-create">
-                        <i class="activity-icon"></i>
 
-                        <div class="activity-foot">
-                            <a class="btn btn-activity" href="/manage/create_event">发布活动</a>
-                        </div>
-                    </div>
-
-                </div>
             </div>
         </div>
     </div>
